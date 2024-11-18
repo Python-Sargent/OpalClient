@@ -71,6 +71,12 @@ public:
 		return m_stack.size();
 	}
 
+	void deleteFront()
+	{
+		m_stack.front()->setVisible(false);
+		deletingMenu(m_stack.front());
+	}
+
 	bool pausesGame()
 	{
 		for (gui::IGUIElement *i : m_stack) {
@@ -81,7 +87,7 @@ public:
 		return false;
 	}
 
-	// FIXME: why isn't this private?
+private:
 	std::list<gui::IGUIElement*> m_stack;
 };
 

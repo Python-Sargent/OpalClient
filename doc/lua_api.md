@@ -276,7 +276,7 @@ the clients (see [Translations]). Accepted characters for names are:
 
 Accepted formats are:
 
-    images: .png, .jpg, .tga, (deprecated:) .bmp
+    images: .png, .jpg, .tga
     sounds: .ogg vorbis
     models: .x, .b3d, .obj, (since version 5.10:) .gltf, .glb
 
@@ -486,9 +486,7 @@ stripping out the file extension:
 * e.g. `foomod_foothing.png`
 * e.g. `foomod_foothing`
 
-Supported texture formats are PNG (`.png`), JPEG (`.jpg`), Bitmap (`.bmp`)
-and Targa (`.tga`).
-Since better alternatives exist, the latter two may be removed in the future.
+Supported texture formats are PNG (`.png`), JPEG (`.jpg`) and Targa (`.tga`).
 
 Texture modifiers
 -----------------
@@ -5657,6 +5655,8 @@ Utilities
       bulk_lbms = true,
       -- ABM supports field without_neighbors (5.10.0)
       abm_without_neighbors = true,
+      -- biomes have a weight parameter (5.11.0)
+      biome_weights = true,
   }
   ```
 
@@ -10709,6 +10709,10 @@ performance and computing power the practical limit is much lower.
     -- distribution of the biomes.
     -- Heat and humidity have average values of 50, vary mostly between
     -- 0 and 100 but can exceed these values.
+
+    weight = 1.0,
+    -- Relative weight of the biome in the Voronoi diagram.
+    -- A value of 0 (or less) is ignored and equivalent to 1.0.
 }
 ```
 
@@ -10782,10 +10786,9 @@ See [Decoration types]. Used by `core.register_decoration`.
 
     flags = "liquid_surface, force_placement, all_floors, all_ceilings",
     -- Flags for all decoration types.
-    -- "liquid_surface": Instead of placement on the highest solid surface
-    --   in a mapchunk column, placement is on the highest liquid surface.
-    --   Placement is disabled if solid nodes are found above the liquid
-    --   surface.
+    -- "liquid_surface": Find the highest liquid (not solid) surface under
+    --   open air. Search stops and fails on the first solid node.
+    --   Cannot be used with "all_floors" or "all_ceilings" below.
     -- "force_placement": Nodes other than "air" and "ignore" are replaced
     --   by the decoration.
     -- "all_floors", "all_ceilings": Instead of placement on the highest

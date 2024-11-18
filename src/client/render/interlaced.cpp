@@ -24,7 +24,7 @@ void InitInterlacedMaskStep::run(PipelineContext &context)
 	last_mask = mask;
 
 	auto size = mask->getSize();
-	u8 *data = reinterpret_cast<u8 *>(mask->lock());
+	u8 *data = reinterpret_cast<u8 *>(mask->lock(video::ETLM_WRITE_ONLY));
 	for (u32 j = 0; j < size.Height; j++) {
 		u8 val = j % 2 ? 0xff : 0x00;
 		memset(data, val, 4 * size.Width);
@@ -35,6 +35,13 @@ void InitInterlacedMaskStep::run(PipelineContext &context)
 
 void populateInterlacedPipeline(RenderPipeline *pipeline, Client *client)
 {
+	// FIXME: "3d_mode = interlaced" is currently broken. Two options:
+	// 1. Remove it
+	// 2. Fix it
+	// If you fix it, make sure to test it with "enable_post_processing = false".
+	// You'll probably have to add a depth texture to make that combination work.
+	// Also, this code should probably use selectColorFormat/selectDepthFormat.
+
 	static const u8 TEXTURE_LEFT = 0;
 	static const u8 TEXTURE_RIGHT = 1;
 	static const u8 TEXTURE_MASK = 2;

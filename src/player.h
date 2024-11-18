@@ -143,7 +143,6 @@ public:
 };
 
 class Map;
-struct CollisionInfo;
 struct HudElement;
 class Environment;
 
@@ -155,12 +154,6 @@ public:
 	virtual ~Player() = 0;
 
 	DISABLE_CLASS_COPY(Player);
-
-	virtual void move(f32 dtime, Environment *env, f32 pos_max_d)
-	{}
-	virtual void move(f32 dtime, Environment *env, f32 pos_max_d,
-			std::vector<CollisionInfo> *collision_info)
-	{}
 
 	// in BS-space
 	inline void setSpeed(v3f speed)
